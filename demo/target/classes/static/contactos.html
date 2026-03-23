@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="es" style="scroll-behavior:smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contactos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #b5a48a;
+      --gold-light: #d9cfc0;
+      --dark: #1a1a1a;
+      --text: #3d3d3d;
+      --muted: #888;
+      --bg: #f8f6f2;
+      --card-bg: #ffffff;
+      --card-back: #2c2a26;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.2rem 3rem;
+      background: #fff;
+      border-bottom: 1px solid #eee;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      color: var(--dark);
+      letter-spacing: 0.05em;
+    }
+    .nav-links { display: flex; gap: 2rem; }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text);
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      height: 420px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .hero-bg {
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, #2c2a26 0%, #4a4640 60%, #8a7f6e 100%);
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: radial-gradient(circle, rgba(181,164,138,.25) 1px, transparent 1px);
+      background-size: 38px 38px;
+    }
+    .hero-card {
+      position: relative;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(8px);
+      border-radius: 16px;
+      padding: 2.8rem 3rem;
+      max-width: 380px;
+      margin-right: 8%;
+      box-shadow: 0 20px 60px rgba(0,0,0,.25);
+    }
+    .hero-card h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      line-height: 1.1;
+      color: var(--dark);
+      margin-bottom: 1rem;
+    }
+    .hero-card p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 1.6rem;
+    }
+    .hero-btn {
+      display: inline-block;
+      padding: .75rem 2rem;
+      background: var(--gold);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background .2s, transform .2s;
+    }
+    .hero-btn:hover { background: #9e8e76; transform: translateY(-2px); }
+
+    /* ── SECTION ── */
+    .section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 5rem 2rem 6rem;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.6rem;
+      text-align: center;
+      color: var(--dark);
+      margin-bottom: 3.5rem;
+    }
+
+    /* ── GRID ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 2.4rem;
+    }
+
+    /* ── CARD FLIP ── */
+    .card-wrap {
+      perspective: 900px;
+    }
+    .card-inner {
+      position: relative;
+      width: 100%;
+      padding-bottom: 115%;
+      transform-style: preserve-3d;
+      transition: transform .55s cubic-bezier(.4,0,.2,1);
+    }
+    .card-wrap:hover .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      inset: 0;
+      border-radius: 18px;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.8rem 1.2rem 1.4rem;
+    }
+
+    /* FRONT */
+    .card-front {
+      background: var(--card-bg);
+      box-shadow: 0 4px 24px rgba(0,0,0,.08);
+      border: 1.5px solid #ece8e0;
+    }
+    .avatar-ring {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: 3px solid var(--gold-light);
+      overflow: hidden;
+      margin-bottom: 1.1rem;
+      background: #e8e4dc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .avatar-ring img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+    }
+    .avatar-initials {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--gold);
+    }
+    .card-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.05rem;
+      color: var(--dark);
+      text-align: center;
+      margin-bottom: .3rem;
+    }
+    .card-role {
+      font-size: 0.78rem;
+      color: var(--muted);
+      text-align: center;
+      letter-spacing: .04em;
+    }
+    .card-socials {
+      display: flex;
+      gap: .7rem;
+      margin-top: .9rem;
+    }
+    .card-socials span {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: #f0ece4;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .7rem;
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    /* BACK */
+    .card-back {
+      background: var(--card-back);
+      transform: rotateY(180deg);
+      box-shadow: 0 4px 24px rgba(0,0,0,.18);
+      gap: .7rem;
+    }
+    .back-icon {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: rgba(181,164,138,.18);
+      border: 2px solid var(--gold);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: .3rem;
+    }
+    .back-icon svg { width: 24px; height: 24px; fill: var(--gold); }
+    .back-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      color: #fff;
+      text-align: center;
+    }
+    .back-phone {
+      font-size: 0.95rem;
+      color: var(--gold-light);
+      letter-spacing: .06em;
+      text-align: center;
+    }
+    .back-email {
+      font-size: 0.78rem;
+      color: #aaa;
+      text-align: center;
+      margin-top: .1rem;
+    }
+    .back-call-btn {
+      margin-top: .6rem;
+      padding: .5rem 1.4rem;
+      background: var(--gold);
+      color: #fff;
+      border: none;
+      border-radius: 30px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: .76rem;
+      font-weight: 500;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+    }
+    .back-call-btn:hover { background: #9e8e76; transform: scale(1.04); }
+
+    /* ── LOADING / ERROR / EMPTY ── */
+    .state-msg {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 4rem 1rem;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+    .spinner {
+      width: 44px; height: 44px;
+      border: 3px solid #e0dbd0;
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── SEARCH BAR ── */
+    .search-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .search-input {
+      width: 0;
+      padding: 0;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.88rem;
+      color: var(--text);
+      transition: width .35s ease, padding .35s ease, border .35s ease, background .35s ease;
+      border-radius: 20px;
+    }
+    .search-wrap.open .search-input {
+      width: 200px;
+      padding: .4rem 1rem;
+      border: 1.5px solid var(--gold-light);
+      background: #faf9f6;
+    }
+    .search-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      padding: .3rem;
+      transition: color .2s;
+      margin-left: .3rem;
+    }
+    .search-btn:hover { color: var(--gold); }
+    .search-btn svg { width: 18px; height: 18px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .hero { height: 320px; justify-content: center; }
+      .hero-card {
+        margin: 0 1.5rem;
+        padding: 2rem 1.8rem;
+        max-width: 100%;
+      }
+      .hero-card h1 { font-size: 2rem; }
+      .section { padding: 3rem 1.2rem 4rem; }
+      .section-title { font-size: 2rem; }
+      .search-wrap.open .search-input { width: 150px; }
+    }
+    @media (max-width: 480px) {
+      .grid { grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+      .avatar-ring { width: 72px; height: 72px; }
+      .avatar-initials { font-size: 1.5rem; }
+      .card-name { font-size: .9rem; }
+      .back-phone { font-size: .82rem; }
+      .search-wrap.open .search-input { width: 120px; }
+    }
+    @media (max-width: 340px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo">LZN115</span>
+  <div class="nav-links">
+    <a href="#">Inicio</a>
+    <a href="#contacts-section">Contactos</a>
+    <div class="search-wrap" id="searchWrap">
+      <input class="search-input" id="searchInput" type="text" placeholder="Buscar contacto…" oninput="filterContacts(this.value)"/>
+      <button class="search-btn" id="searchBtn" onclick="toggleSearch()" title="Buscar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-card">
+    <h1>Lista de<br>Contactos</h1>
+    <p>Agenda de Contactos. Un Cinco para el primer corte Moviles I.</p>
+    <button class="hero-btn" onclick="document.getElementById('contacts-section').scrollIntoView({behavior:'smooth'})">Ver</button>
+  </div>
+</section>
+
+<!-- CONTACTS SECTION -->
+<section class="section" id="contacts-section">
+  <h2 class="section-title">Lista de Contactos</h2>
+  <div class="grid" id="contactList">
+    <!-- skeleton/loader -->
+    <div class="state-msg">
+      <div class="spinner"></div>
+      Cargando contactos…
+    </div>
+  </div>
+</section>
+
+<script>
+  function getInitials(name) {
+    return (name || '?').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
+  }
+
+  function buildCard(contact) {
+    const wrap = document.createElement('div');
+    wrap.className = 'card-wrap';
+
+    const initials = getInitials(contact.name);
+    const phone = contact.telefono || contact.phone || '—';
+    const role  = contact.role || contact.cargo || 'Contacto';
+    const email = contact.email || '';
+    wrap.dataset.search = [(contact.name || ''), phone, role].join(' ').toLowerCase();
+
+    wrap.innerHTML = `
+      <div class="card-inner">
+        <!-- FRONT -->
+        <div class="card-front">
+          <div class="avatar-ring">
+            ${contact.avatar
+              ? `<img src="${contact.avatar}" alt="${contact.name}" onerror="this.parentElement.innerHTML='<span class=\'avatar-initials\'>${initials}</span>'">`
+              : `<span class="avatar-initials">${initials}</span>`
+            }
+          </div>
+          <div class="card-name">${contact.name || 'Sin nombre'}</div>
+          <div class="card-role">${role}</div>
+          <div class="card-socials">
+            <span>f</span><span>in</span><span>✉</span>
+          </div>
+        </div>
+        <!-- BACK -->
+        <div class="card-back">
+          <div class="back-icon">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.01-.24 11.5 11.5 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.5 11.5 0 0 0 .57 3.6 1 1 0 0 1-.25 1.01l-2.2 2.18z"/>
+            </svg>
+          </div>
+          <div class="back-name">${contact.name || 'Sin nombre'}</div>
+          <div class="back-phone">${phone}</div>
+          ${email ? `<div class="back-email">${email}</div>` : ''}
+          <button class="back-call-btn" onclick="window.location.href='tel:${phone}'">Llamar</button>
+        </div>
+      </div>`;
+    return wrap;
+  }
+
+  function filterContacts(query) {
+    const q = query.trim().toLowerCase();
+    const container = document.getElementById('contactList');
+    const cards = container.querySelectorAll('.card-wrap');
+    let visible = 0;
+    cards.forEach(card => {
+      const match = !q || card.dataset.search.includes(q);
+      card.style.display = match ? '' : 'none';
+      if (match) visible++;
+    });
+    let noRes = container.querySelector('.no-results');
+    if (!visible && q) {
+      if (!noRes) {
+        noRes = document.createElement('div');
+        noRes.className = 'state-msg no-results';
+        container.appendChild(noRes);
+      }
+      noRes.textContent = 'No se encontraron contactos con "' + query + '"';
+    } else if (noRes) {
+      noRes.remove();
+    }
+  }
+
+  function toggleSearch() {
+    const wrap = document.getElementById('searchWrap');
+    const input = document.getElementById('searchInput');
+    const isOpen = wrap.classList.toggle('open');
+    if (isOpen) {
+      input.focus();
+      document.getElementById('contacts-section').scrollIntoView({behavior:'smooth'});
+    } else {
+      input.value = '';
+      filterContacts('');
+    }
+  }
+
+  document.addEventListener('click', function(e) {
+    const wrap = document.getElementById('searchWrap');
+    if (wrap && !wrap.contains(e.target)) {
+      wrap.classList.remove('open');
+      const input = document.getElementById('searchInput');
+      if (input) { input.value = ''; filterContacts(''); }
+    }
+  });
+
+  async function loadContacts() {
+    const container = document.getElementById('contactList');
+    try {
+      const res  = await fetch('http://localhost:8080/contacts');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      container.innerHTML = '';
+
+      if (!data.length) {
+        container.innerHTML = '<div class="state-msg">No se encontraron contactos.</div>';
+        return;
+      }
+
+      data.forEach(contact => container.appendChild(buildCard(contact)));
+
+    } catch (err) {
+      console.error('Error cargando contactos:', err);
+      container.innerHTML = `
+        <div class="state-msg">
+          ⚠️ No se pudo conectar con la API.<br>
+          <small style="color:#bbb">${err.message}</small>
+        </div>`;
+    }
+  }
+
+  loadContacts();
+</script>
+</body>
+</html>
